@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage[margin=0.5in]{geometry}
+\begin{document}
+	\begin{flushleft}
+		Adam Frazee \\*
+		CSE 278\\*
+		Dr.Yue\\*
+		11/20/2015\\*
+	\end{flushleft}
+	\begin{center}
+		\LARGE{\textbf{Homework 7}}
+	\end{center}
+	\textbf{4.3} When processor designers consider a possible improvement to the processor
+datapath, the decision usually depends on the cost/performance trade-off . In
+the following three problems, assume that we are starting with a datapath from
+Figure 4.2, where I-Mem, Add, Mux, ALU, Regs, D-Mem, and Control blocks have
+latencies of 400 ps, 100 ps, 30 ps, 120 ps, 200 ps, 350 ps, and 100 ps, respectively,
+and costs of 1000, 30, 10, 100, 200, 2000, and 500, respectively.
+Consider the addition of a multiplier to the ALU. Th is addition will add 300 ps to the
+latency of the ALU and will add a cost of 600 to the ALU. The result will be 5\% fewer
+instructions executed since we will no longer need to emulate the MUL instruction.
+\\*
+\begin{center}
+  \begin{tabular}{ |l | l | l | l | l | l | l  | l || l | }
+    \hline
+    &I-Mem & Add & Mux & ALU & Regs & D-Mem & Control Blocks & Sum \\ \hline
+    Time&400ps & 100ps & 30ps & 120ps & 200ps &350ps & 100ps& 1300ps\\ \hline
+    Cost&1000 & 30*2 & 10*3 & 100 & 200 & 2000 & 500 & 3890 \\
+    \hline
+  \end{tabular}
+\end{center}
+
+\textbf{4.3.1} What is the clock cycle time with and without this improvement?
+\begin{center}
+
+
+
+I-Mem + Add + Mux + ALU + Regs + D-Mem + Control blocks \\
+400 + 100 + 30 + 120 +200 +350 + 100 = 1300ps
+
+\end{center}
+
+\textbf{4.3.2} What is the speedup achieved by adding this improvement?
+
+\textbf{4.3.3}Compare the cost/performance ratio with and without this
+improvement.
+\end{document}
