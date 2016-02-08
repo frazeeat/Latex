@@ -24,7 +24,7 @@
 	\node[attribute] (expdate) [below left of=creditcard, node distance=4em] {Exp Date} edge (creditcard);
 	\node[attribute] (billaddress) [below right of=customer] {Billing Addresss} edge (customer);
 	
-	\node[relationship] (goto) [above of=customer, node distance=5em] {GOTO} edge  node[auto,swap] {(1,1)} (customer);
+	\node[relationship] (goto) [above of=customer, node distance=5em] {GOTO} edge [total] node[auto,swap] {(1,1)} (customer);
 	
 	\node[entity] (restaurant) [above of=goto, node distance=5em] {Restaurant} edge  node[auto,swap] {(1,N)} (goto);
 	

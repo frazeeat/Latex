@@ -1,0 +1,35 @@
+% Author: Adam Frazee
+% the tikz-er2.sty package is available at:
+% http://tagus.inesc-id.pt/~pcalado/tikzer2/tikz-er2.html
+
+\documentclass[a4paper,12pt,landscape]{article}
+
+\usepackage[landscape]{geometry}
+\usepackage{graphicx}
+
+\usepackage{tikz-er2}
+\usepackage{tikz}
+\begin{document}
+
+\tikzstyle{every attribute} = [fill=blue!20]
+\tikzstyle{every relationship} = [fill=red!20]
+\centering
+\scalebox{.87}{
+\begin{tikzpicture}[node distance=8em]
+	\node[entity] (pet) {Pet};
+	\node[attribute] (name) [below left of= pet] {name} edge (pet);
+	\node[attribute] (age) [below right of= pet] {age} edge (pet);
+	\node[attribute] (description) [above right of= pet] {description} edge (pet);
+	\node[relationship] (adopt) [right of= pet] {ADOPT} edge (pet);
+	\node[attribute] (sdate) [above right of= adopt] {start date} edge (adopt);
+	\node[attribute] (edate) [below right of= adopt] {end date} edge (adopt);
+	
+	\node[entity] (adopter) [right of= adopt, node distance=12em] {Adopter} edge (adopt);
+	\node[attribute] (phone) [below right of= adopter] {phone} edge (adopter);
+	
+
+
+\end{tikzpicture}
+}
+
+\end{document}

@@ -1,0 +1,60 @@
+% Author: Adam Frazee
+% the tikz-er2.sty package is available at:
+% http://tagus.inesc-id.pt/~pcalado/tikzer2/tikz-er2.html
+
+\documentclass[a4paper,12pt,landscape]{article}
+
+\usepackage[landscape]{geometry}
+\usepackage{graphicx}
+
+\usepackage{tikz-er2}
+\usepackage{tikz}
+\begin{document}
+
+\tikzstyle{every attribute} = [fill=blue!20]
+\tikzstyle{every relationship} = [fill=red!20]
+\centering
+\scalebox{.55}{
+\begin{tikzpicture}[node distance=10em]
+	\node[entity] (meal){Meal};
+	
+	\node[entity] (restaurant) [left of= meal, node distance=20em] {Restaurant};
+	
+	\node[entity] (customers) [below of=restaurant] {Customers};
+	
+	\node[entity] (food) [right of=meal, node distance=20em] {Food};
+	
+	\node[entity] (menu) [above of=meal, node distance=20em] {Menu};
+	
+	\node[entity] (reviewitem) [below right of= customers] {Reviewable Item};
+	
+	\node[entity] (review) [below of= reviewitem, node distance=20em] {Review};
+	
+	\node[entity] (drink) [right of=customers, node distance=50em] {Drink} ;
+	
+	\node[entity] (savedmeal) [below of =meal, node distance=30em] {Saved Meal};
+	
+	\node[attribute] (d) [right of= customers] {d} edge (restaurant) edge (food) edge (drink) edge (reviewitem) ;
+	
+	\node[relationship] (hasrating) [below of =reviewitem] {HAS-RATING} edge (reviewitem) edge (review);
+	
+	\node[relationship] (partof) [right of= reviewitem, node distance=32.95em] {PART-OF} edge (meal) edge (food) edge (drink);
+		
+	\node[relationship] (eat) [above of= meal] {EAT} edge (meal) edge (menu);
+	
+	\node[relationship] (orders) [left of= meal] {ORDERS} edge (meal) edge (restaurant) edge (customers);
+	
+	\node[relationship] (todrink) [right of=menu, node distance=30em] {TO-DRINK} edge (drink) edge (menu); 
+	
+	\node[relationship] (hasmenu) [above right of= restaurant, node distance=13.5em] {HAS-MENU} edge (restaurant) edge (menu);
+	
+	\node[relationship] (wasliked) [right of= reviewitem, node distance=12.9em] {WAS-LIKED} edge (meal) edge (savedmeal);
+	
+	
+	
+	
+
+\end{tikzpicture}
+}
+
+\end{document}

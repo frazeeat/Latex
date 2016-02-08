@@ -1,0 +1,28 @@
+% Author: Adam Frazee
+% the tikz-er2.sty package is available at:
+% http://tagus.inesc-id.pt/~pcalado/tikzer2/tikz-er2.html
+
+\documentclass[a4paper,12pt,landscape]{article}
+
+\usepackage[landscape]{geometry}
+\usepackage{graphicx}
+
+\usepackage{tikz-er2}
+\usepackage{tikz}
+\begin{document}
+
+\tikzstyle{every attribute} = [fill=blue!20]
+\tikzstyle{every relationship} = [fill=red!20]
+\centering
+\scalebox{.87}{
+\begin{tikzpicture}[node distance=8em]
+	\node[entity] (apartment) {Apartment} ;
+	\node [ident relationship] (hasbuildings) [above of= apartment] {HAS-BUILDINGS} edge (apartment);
+	\node[weak entity] (building) [above of= hasbuildings] {Building}  edge [total] (hasbuildings);
+	\node[attribute] (buildingnum) [left of= building] {building num} edge (building);
+	\node[attribute] (address) [right of= building] {address} edge (building);
+
+\end{tikzpicture}
+}
+
+\end{document}
