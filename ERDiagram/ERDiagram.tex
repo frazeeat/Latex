@@ -1,0 +1,96 @@
+% Author: Adam Frazee
+% the tikz-er2.sty package is available at:
+% http://tagus.inesc-id.pt/~pcalado/tikzer2/tikz-er2.html
+
+\documentclass[a4paper,12pt,landscape]{article}
+
+\usepackage[landscape]{geometry}
+\usepackage{graphicx}
+
+\usepackage{tikz-er2}
+\usepackage{tikz}
+\begin{document}
+
+\tikzstyle{every attribute} = [fill=blue!20]
+\tikzstyle{every relationship} = [fill=red!20]
+\centering
+\scalebox{.70}{
+\begin{tikzpicture}[node distance=8em]
+
+	\node[entity] (customer) {Customer};
+	\node[attribute] (cusname) [below left of=customer, node distance=5em] {cusname} edge (customer);
+	\node[attribute] (creditcard) [below of=customer] {Credit Card} edge (customer);
+	\node[attribute] (creditnum) [below right of=creditcard, node distance=5.5em] {creditnum} edge (creditcard);
+	\node[attribute] (expdate) [below left of=creditcard, node distance=4em] {Exp Date} edge (creditcard);
+	\node[attribute] (billaddress) [below right of=customer] {Billing Addresss} edge (customer);
+	
+	\node[relationship] (goto) [above of=customer, node distance=5em] {GOTO} edge  node[auto,swap] {(1,1)} (customer);
+	
+	\node[entity] (restaurant) [above of=goto, node distance=5em] {Restaurant} edge  node[auto,swap] {(1,N)} (goto);
+	
+	\node[multi attribute] (genre) [below right of=restaurant] {genre} edge (restaurant);
+	\node[attribute] (address) [below left of=restaurant] {\discriminator{address}} edge (restaurant);
+	\node[attribute] (phone) [left of=restaurant] {phone} edge (restaurant);
+	\node[attribute] (website) [ right of= restaurant, node distance=6.5em] {website} edge (restaurant);
+	
+	\node[ident relationship] (hasmenu) [above of=restaurant, node distance=12em] {HAS-MENU} edge   [total] node[auto,swap] {(1,N)} (restaurant);
+	
+	\node[ident relationship] (hasratings) [above right of=restaurant] {HAS-RATINGS} edge node[auto,swap] {(0,N)}  (restaurant);
+	
+	\node[relationship] (orders) [left of=hasratings, node distance=18em] {ORDERS} edge  node[auto,swap] {(1,1)}  (restaurant);
+	
+	
+	\node[entity] (delivery) [left of= hasmenu, node distance=20em] {Delivery} edge node[auto,swap] {(1,1)} (orders) edge  node[auto,swap] {(1,N)}  (hasmenu);
+	
+	\node[attribute] (d-wait) [left of= delivery] {wait} edge (delivery);
+	\node[derived attribute] (tip) [below of= delivery, node distance=5em] {tip} edge (delivery);	
+	
+	\node[entity] (online) [above of= orders, node distance=15em] {Online} edge node[auto,swap] {(1,1)} (orders) edge node[auto,swap] {(1,N)}(hasmenu);
+	
+	\node[attribute] (o-wait) [left of= online] {wait} edge (online);
+	\node[derived attribute] (b-info) [above of= online, node distance=5em] {billing info} edge (online);
+	\node[weak entity] (menu) [right of= hasmenu, node distance=15em] {Menu} edge [total] node[auto,swap] {(1,N)} (hasmenu);
+	
+	\node[relationship] (drink) [above of= menu, node distance=6em]  {DRINK} edge node[auto,swap] {(0,N)}(menu);
+	
+	\node[entity] (drinks)[above of= drink, node distance=6em] {Drink} edge node[auto,swap] {(1,N)} (drink) edge node[auto,swap] {(0,N)}  (hasratings);	
+	\node[attribute] (ddescription) [left of =drinks] {\discriminator{description}} edge (drinks); 
+	\node[attribute] (dprice) [below right of =drinks, node distance=5em] {price} edge (drinks);
+	\node[attribute] (dcost) [left of =dprice, node distance=10em] {cost} edge (drinks); 
+	\node[attribute] (dname) [below left of =drinks] {\discriminator{name}} edge (drinks);
+	
+	\node[relationship] (eat) [right of= menu]  {EAT} edge node[auto,swap] {(1,N)}(menu);
+	
+	\node[entity] (food) [right of= eat] {Food} edge node[auto,swap] {(1,N)} (eat) edgenode[auto,swap] {(0,N)} (hasratings);
+	\node[attribute] (fdescription) [below left of =food] {\discriminator{description}} edge (food); 
+	\node[attribute] (fcost) [below of =food] {cost} edge (food); 
+	\node[attribute] (fprice) [below right of =food] {price} edge (food);
+	\node[attribute] (fname) [above left of =food] {\discriminator{name}} edge (food); 
+	
+	\node[relationship] (meal) [right of= drinks, node distance=16em] {MEAL} edge node[auto,swap] {(M,N)} (food) edge node[auto,swap] {(M,N)} (drinks); 
+	\node[derived attribute] (avgcost) [below left of= menu, node distance=4.5em] {avg-cost} edge (menu);
+	\node[attribute] (idnum) [above right of= menu, node distance=4.5em] {\discriminator{id-num}} edge (menu);
+	
+	\node[entity] (meals) [right of= meal] {Meal} edge node[auto,swap] {(1,1)} (meal);
+	\node[derived attribute] (costmeal) [right of= meals] {cost meal} edge (meals);
+	\node[derived attribute] (tip) [below right of= meals, node distance=6em] {tip} edge (meals);
+	\node[derived attribute] (totalcost) [below left of= meals, node distance=5em] {total cost} edge (meals);   
+	
+	\node[relationship] (wasliked) [below of= meals] {WAS-LIKED} edge node[auto,swap] {(0,1)} (meals);
+	
+	\node[entity] (savemeals) [right of= wasliked] {Saved Meal} edge node[auto,swap] {(M,N)} (wasliked);
+	\node[derived attribute] (mprice) [below left of =savemeals] {price} edge (savemeals);
+	\node[derived attribute] (mealitems) [below  of =savemeals] {mealitems} edge (savemeals);
+	\node[derived attribute] (savedrest) [below right of =savemeals, node distance=5.3em] {restaurant} edge (savemeals);
+	
+	\node[weak entity] (review) [below right of= hasratings, node distance=20em] {Review} edge node[auto,swap] {(M,N)} (hasratings);
+	\node[attribute] (rate) [below left of= review, node distance=6em] {Like/Dislike} edge (review);
+	\node[attribute] (rid) [below of= review] {\key{RefID}} edge (review);
+	\node[attribute] (comment) [below right of= review] {comment} edge (review);
+	
+	
+
+\end{tikzpicture}
+}
+
+\end{document}
