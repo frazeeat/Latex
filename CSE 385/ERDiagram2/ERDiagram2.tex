@@ -17,38 +17,71 @@
 \scalebox{.55}{
 \begin{tikzpicture}[node distance=10em]
 	\node[entity] (meal){Meal};
+	\node[derived attribute] (mtotalcost) [below left of= meal, node distance=5em] {total cost} edge (meal); 
+	\node[derived attribute] (mcost) [below left of= mtotalcost, node distance=5em] {cost} edge (mtotalcost); 
+	\node[derived attribute] (mtip) [above left of= mcost, node distance=3em] {tip} edge (mtotalcost);
 	
 	\node[entity] (restaurant) [left of= meal, node distance=20em] {Restaurant};
-	
-	\node[entity] (customers) [below of=restaurant] {Customers};
+	\node[attribute] (reskey) [left of= restaurant] {\key{key}} edge (restaurant);
+	\node[attribute] (resname) [left of=reskey] {name} edge (reskey);
+	\node[attribute] (address) [below of= resname, node distance=3em] {address} edge (reskey);
+	\node[attribute] (resphone)[below of= reskey, node distance=3em] {phone} edge (restaurant);
+	\node[attribute] (reswebsite) [above of= reskey, node distance=3em] {website} edge (restaurant);
+	\node[multi attribute] (genre)[above of= restaurant, node distance=3.5em]  {genre} edge (restaurant);
+		
+	\node[entity] (customer) [below of=restaurant] {Customer};
+	\node[attribute] (cusname) [above of= customer, node distance=3.5em] {name} edge (customer); 
+	\node[attribute] (creditcard) [left of= customer] {\key{credit card}} edge (customer);
+	\node[attribute] (creditnum) [left of= creditcard] {credit number} edge (creditcard);
+	\node[attribute] (expdate) [below left of= creditcard, node distance=4em] {exp date} edge (creditcard);
+	\node[attribute] (billing) [above of= creditcard, node distance=3em] {billing address} edge (customer);
 	
 	\node[entity] (food) [right of=meal, node distance=20em] {Food};
+	\node[attribute] (fcost) [above of= food, node distance=9em] {cost} edge (food);
+	\node[attribute] (fkey) [left of= fcost, node distance=6em] {\key{key}} edge (food);
+	\node[attribute] (fname) [left of= fkey, node distance=6em] {name} edge (fkey);
+	\node[attribute] (fdescription) [below of=fname, node distance=3em] {description} edge (fkey);
 	
-	\node[entity] (menu) [above of=meal, node distance=20em] {Menu};
 	
-	\node[entity] (reviewitem) [below right of= customers] {Reviewable Item};
+	\node[weak entity] (menu) [above of=meal, node distance=20em] {Menu};
+	\node[attribute] (idnum) [below right of=menu,node distance=9em] {\discriminator{id-num}} edge(menu);
+	\node[derived attribute] (avgcost) [right of= idnum, node distance=6em] {avg-cost} edge (menu);
+	
+	\node[entity] (reviewitem) [below right of= customer] {Reviewable Item};
+	\node[attribute] (revid) [left of= reviewitem, node distance=8em] {\key{id}} edge (reviewitem);
 	
 	\node[entity] (review) [below of= reviewitem, node distance=20em] {Review};
+	\node[attribute] (like) [left of= review] {like/dislike} edge (review);
+	\node[attribute] (rid) [above of=like, node distance=3em] {\key{rid}} edge (review);
+	\node[attribute] (rcomment) [above of=rid, node distance=3em] {comment} edge (review);
 	
-	\node[entity] (drink) [right of=customers, node distance=50em] {Drink} ;
+	\node[entity] (drink) [right of=customer, node distance=50em] {Drink} ;
+	\node[attribute] (dkey) [below right of= drink, node distance=5em] {\key{key}} edge (drink);
+	\node[attribute] (dname) [right of= dkey, node distance=6em] {name} edge (dkey);
+	\node[attribute] (ddescription) [below of=dname, node distance=3em] {description} edge (dkey);
+	\node[attribute] (dcost) [below of= drink, node distance=7em] {cost} edge (drink);
 	
 	\node[entity] (savedmeal) [below of =meal, node distance=30em] {Saved Meal};
+	\node[derived attribute,multi attribute] (mealitems) [below of= savedmeal, node distance=7em] {items} edge (savedmeal);
+	\node[derived attribute] (srest) [right of= mealitems, node distance=7em] {restaurant} edge (savedmeal);
+	\node[derived attribute] (sprice) [left of= mealitems, node distance=7em] {price} edge (savedmeal);
 	
-	\node[attribute] (d) [right of= customers] {d} edge (restaurant) edge (food) edge (drink) edge (reviewitem) ;
+	\node[attribute] (d) [right of= customer] {d} edge (restaurant) edge (food) edge (drink) edge (reviewitem) ;
 	
-	\node[relationship] (hasrating) [below of =reviewitem] {HAS-RATING} edge (reviewitem) edge (review);
+	\node[relationship] (hasrating) [below of =reviewitem] {HAS-RATING} edge node[auto,swap] {(0,N)} (reviewitem) edge node[auto,swap] {(1,N)}(review);
 	
-	\node[relationship] (partof) [right of= reviewitem, node distance=32.95em] {PART-OF} edge (meal) edge (food) edge (drink);
+	\node[relationship] (partof) [right of= reviewitem, node distance=32.95em] {PART-OF} edge node[auto,swap] {(0,1)} (meal) edge node[auto,swap] {(0,N)}(food) edge node[auto,swap] {(0,N)} (drink);
 		
-	\node[relationship] (eat) [above of= meal] {EAT} edge (meal) edge (menu);
+	\node[relationship] (eat) [above of= meal, node distance=5em] {EAT} edge node[auto,swap] {(M,N)} (food) edge node[auto,swap] {(0,N)} (menu);
 	
-	\node[relationship] (orders) [left of= meal] {ORDERS} edge (meal) edge (restaurant) edge (customers);
+	\node[relationship] (orders) [left of= meal] {ORDERS} edge node[auto,swap] {(0,N)} (meal) edge node[auto,swap] {(0,1)}(restaurant) edge node[auto,swap] {(1,N)}(customer);
+	\node[attribute] (owait) [above right of=orders,node distance=6em] {wait} edge (orders);
 	
-	\node[relationship] (todrink) [right of=menu, node distance=30em] {TO-DRINK} edge (drink) edge (menu); 
+	\node[relationship] (todrink) [right of=menu, node distance=30em] {TO-DRINK} edge node[auto,swap] {(M,N)} (drink) edge node[auto,swap] {(0,N)} (menu); 
 	
-	\node[relationship] (hasmenu) [above right of= restaurant, node distance=13.5em] {HAS-MENU} edge (restaurant) edge (menu);
+	\node[ident relationship] (hasmenu) [above right of= restaurant, node distance=13.5em] {HAS-MENU} edge [total] node[auto,swap] {(1,N)} (restaurant) edge [total] node[auto,swap] {(1,N)}  (menu);
 	
-	\node[relationship] (wasliked) [right of= reviewitem, node distance=12.9em] {WAS-LIKED} edge (meal) edge (savedmeal);
+	\node[relationship] (wasliked) [right of= reviewitem, node distance=12.9em] {WAS-LIKED} edge node[auto,swap] {(0,N)} (meal) edge node[auto,swap] {(0,N)} (savedmeal);
 	
 	
 	
