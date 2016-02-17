@@ -1,0 +1,20 @@
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Lyttle()]{dispatch}
+Eric Lyttle.
+\newblock Hikers spreading fungus that's killing ohio bats.
+\newblock URL
+  \url{http://www.dispatch.com/content/stories/local/2015/06/15/humans-have-role-in-spread-of-bat-ills.html}.
+
+\bibitem[Drake()]{wired}
+Nadia Drake.
+\newblock Why bats are such good hosts for ebola and other deadly diseases.
+\newblock URL
+  \url{http://www.wired.com/2014/10/bats-ebola-disease-reservoir-hosts/l}.
+
+\end{thebibliography}
