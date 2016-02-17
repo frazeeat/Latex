@@ -1,0 +1,142 @@
+% Author: Adam Frazee
+% the tikz-er2.sty package is available at:
+% http://tagus.inesc-id.pt/~pcalado/tikzer2/tikz-er2.html
+
+\documentclass[a4paper,10pt]{article}
+
+\usepackage{geometry}
+\usepackage{graphicx}
+
+\usepackage{tikz-er2}
+\usepackage{tikz}
+\begin{document}
+\begin{flushleft}
+Adam Frazee\\
+CSE 385\\
+02/15/2016\\
+Daniela Inclezan\\
+
+\tikzstyle{every attribute} = [fill=blue!20]
+\tikzstyle{every relationship} = [fill=red!20]
+\centering
+\end{flushleft}
+\begin{large}
+Exercise 1
+\end{large}
+\tikzstyle{every attribute} = [fill=blue!20]
+\tikzstyle{every relationship} = [fill=red!20]
+\centering
+\scalebox{.55}{
+\begin{tikzpicture}[node distance=10em]	
+	\node[entity] (book) {Book};
+	\node[multi attribute] (bauthor) [below left of=book,node distance=5em] {author} edge (book);
+	\node[attribute] (btitle) [right of=bauthor,node distance=5.5em] {title} edge (book);
+	\node[attribute] (bedition) [right of=btitle,node distance=5.5em] {edition} edge (book);
+	\node[attribute] (bisbn) [above left of=book,node distance=5em] {\key{isbn}} edge (book);
+	\node[attribute] (byear) [right of=bisbn,node distance=5.5em] {year} edge (book);
+	
+	\node[entity] (publisher) [right of=book, node distance=25em] {Publisher};
+	\node[attribute] (puid) [right of= publisher] {\key{uid}} edge (publisher);
+	\node[attribute] (cdis) [above of= puid, node distance=3em] {discount} edge (publisher);
+	\node[attribute] (cname) [below of= puid, node distance=3em] {name} edge (publisher);
+	
+	\node[entity] (course) [left of= book, node distance=20em] {Course};
+	\node[attribute] (ctitle) [left of= course] {title} edge (course);
+	\node[attribute] (cdep) [above of= ctitle, node distance=3em] {dep} edge (course);
+	\node[attribute] (chours) [below of= ctitle, node distance=3em] {hours} edge (course);
+	\node[attribute] (ccrn) [below of= course,node distance=3em] {\key{crn}}edge (course);
+	
+	\node[relationship] (publishedby) [left of=publisher, node distance=13em] {PUBLISHED-BY} edge  node[auto,swap] {(1,N)}  (publisher) edge  node[auto,swap] {(0,N)}  (book);
+	\node[relationship] (usedby) [left of=book] {USED-BY}edge  node[auto,swap] {(0,N)}  (book) edge  node[auto,swap] {(1,N)}  (course);
+	\node[attribute] (stock) [below of= usedby,node distance=5em] {stock} edge (usedby);
+\end{tikzpicture}
+}
+\begin{large}
+Exercise 2
+\end{large}
+\flushleft
+Student\\
+key - Student\_number\\
+Super key - (Name,class,major),(key,any other attributes)\\
+Course\\
+key - Course\_number\\
+Super key - (Name,hours,department),(key,any other attributes)\\
+Prerequisite\\
+key - Prerequisite\_number\\
+Super key - (key,Course\_number)\\
+Section\\
+key - Section\_identifier\\
+Super key - (Course\_number ,semester,year),(key,any other attributes)\\
+Grade\_Report\\
+key - (Student\_number , Section\_identifier)\\
+Super key - (key,any other attributes)\\
+\begin{large}
+Exercise 3
+\end{large}
+\\
+Foreign keys - Serial\_no , Salesperson\_id \\
+CAR
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	\underline{Serial\_no} & model & Manufacturer & Price \\ \hline
+	7689 & explorer & ford & 2500 \\ \hline
+	8790 & fiero & pontiac & 850 \\ \hline
+	9509 & sky & saturn &  3400 \\ \hline
+
+\end{tabular} 
+\\
+\bigskip
+OPTION
+\begin{tabular}{|l|l|l|}
+	\hline
+	\underline{Serial\_no} & \underline{Option\_name} & Price \\ \hline
+	7689 & Tow & 50 \\ \hline
+	8790 & Spoiler & 120 \\ \hline
+	9509 & Sun Roof & 1000 \\ \hline
+
+\end{tabular} 
+\\
+\bigskip
+SALE
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	\underline{Salesperson\_id} & \underline{Serial\_no} & Date & Sale Price \\ \hline
+	10 & 7689 & 02/14/2016 & 2000 \\ \hline
+	11 & 8790 & 01/15/2015 & 3000 \\ \hline
+	12 & 9509 & 12/28/2015 & 4000 \\ \hline
+
+\end{tabular}
+\\ 
+\bigskip
+SALESPERSON
+\begin{tabular}{|l|l|l|}
+	\hline
+	\underline{Salesperson\_id} & Name & Phone \\ \hline
+	10 & Mary & 555-5324 \\ \hline
+	11 & Molly & 555-2124 \\ \hline
+	12 & John & 555-1235 \\ \hline
+
+\end{tabular} 
+\\
+\bigskip
+failed insert
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	\underline{Salesperson\_id} & \underline{Serial\_no} & Date & Sale Price \\ \hline
+	15 & 7689 & 02/15/2016 & 2100 \\ \hline
+
+\end{tabular}
+\\
+Since 15 is not a valid id for SALESPERSON. The referential integrity is broken.
+\\
+\bigskip
+successful insert
+\begin{tabular}{|l|l|l|l|}
+	\hline
+	\underline{Salesperson\_id} & \underline{Serial\_no} & Date & Sale Price \\ \hline
+	10 & 7689 & 02/01/2016 & 2200 \\ \hline
+
+\end{tabular}
+\\
+However this is fine, because 10 is a defined salesperson. 
+\end{document}
